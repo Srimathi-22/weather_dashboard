@@ -29,7 +29,7 @@ def index():
         else:
             error = "City not found! Try again."
 
-    return render_template("index.html", weather=weather, forecast=forecast, error=error)
+    return render_template("index.html", weather=weather, forecast=forecast, error=error, city=city if request.method == "POST" else "")
 
 if __name__ == "__main__":
     app.run(debug=True)
