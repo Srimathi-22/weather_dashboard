@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            color: white;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        input {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            width: 250px;
+        }
+        button {
+            padding: 10px 25px;
+            background: #ff6b6b;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .weather-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            min-width: 300px;
+        }
+        .forecast-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .forecast-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            min-width: 100px;
+        }
+        .error { color: #ff6b6b; font-size: 1.2rem; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🌤 Weather Dashboard</h1>
+
+    <form method="POST">
+        <input type="text" name="city" placeholder="Enter city name..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if weather %}
+        <div class="weather-card">
+            <h2>{{ weather.name }}, {{ weather.sys.country }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ weather.weather[0].icon }}@2x.png">
+            <h3>{{ weather.main.temp }}°C</h3>
+            <p>{{ weather.weather[0].description | capitalize }}</p>
+            <p>💧 Humidity: {{ weather.main.humidity }}%</p>
+            <p>💨 Wind: {{ weather.wind.speed }} m/s</p>
+        </div>
+    {% endif %}
+
+    {% if forecast %}
+        <h3 style="margin-top: 30px;">5-Day Forecast</h3>
+        <div class="forecast-container">
+            {% for item in forecast.list %}
+                {% if loop.index0 % 8 == 0 %}
+                <div class="forecast-card">
+                    <p>{{ item.dt_txt[:10] }}</p>
+                    <img src="http://openweathermap.org/img/wn/{{ item.weather[0].icon }}.png">
+                    <p>{{ item.main.temp }}°C</p>
+                    <p>{{ item.weather[0].description | capitalize }}</p>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>
